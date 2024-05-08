@@ -41,17 +41,17 @@ void main() {
 
         // Calculate diffuse component
         float diffuse_factor = max(dot(model_normal, light_dir), 0.0);
-        vec3 diffuse_color = light_colors[i] * mat_color * diffuse_factor / (light_distance * light_distance);
+        vec3 diffuse_color = light_colors[i] * mat_color * diffuse_factor;
 
         // Calculate specular component
         vec3 view_dir = normalize(camera_position - model_position);
         vec3 reflect_dir = reflect(-light_dir, model_normal);
         float spec_angle = max(dot(view_dir, reflect_dir), 0.0);
         float specular_factor = pow(spec_angle, mat_shininess);
-        vec3 specular_color = light_colors[i] * mat_specular * specular_factor / (light_distance * light_distance);
+        vec3 specular_color = light_colors[i] * mat_specular * specular_factor;
 
         // Add diffuse and specular contributions to final color
-        final_color += diffuse_color + specular_color;
+        final_color += ambient_color + diffuse_color + specular_color;
     }
 
     // Add ambient color to final color
