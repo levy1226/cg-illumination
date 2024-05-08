@@ -3,6 +3,7 @@ precision highp float;
 
 // Attributes
 in vec3 position;
+in vec3 normal;
 in vec2 uv;
 
 // Uniforms
@@ -33,9 +34,27 @@ void main() {
     // Get initial position of vertex (prior to height displacement)
     vec4 world_pos = world * vec4(position, 1.0);
 
-    // Pass diffuse and specular illumination onto the fragment shader
-    diffuse_illum = vec3(0.0, 0.0, 0.0);
-    specular_illum = vec3(0.0, 0.0, 0.0);
+    // Compute vertex normal
+    vec3 world_normal = normalize(normal);
+
+    // Compute diffuse and specular illumination per vertex
+    diffuse_illum = vec3(0.0);
+    specular_illum = vec3(0.0);
+    for (int i = 0; i < num_lights; ++i) {
+        // Calculate light direction
+        vec3 light_dir = normalize(light_positions[i] - world_pos.xyz);
+        
+        // Calculate diffuse component
+        float diffuse_factor = max(dot(world_normal, light_dir), 0.0);
+        diffuse_illum += diffuse_factor * light_colors[i];
+        
+        // Calculate specular component (Phong lighting model)
+        vec3 view_dir = normalize(camera_position - world_pos.xyz);
+        vec3 reflect_dir = reflect(-light_dir, world_normal);
+        float spec_angle = max(dot(view_dir, reflect_dir), 0.0);
+        float specular_factor = pow(spec_angle, mat_shininess);
+        specular_illum += specular_factor * light_colors[i];
+    }
 
     // Pass vertex texcoord onto the fragment shader
     model_uv = uv;
