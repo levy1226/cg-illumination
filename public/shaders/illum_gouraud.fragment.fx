@@ -18,7 +18,14 @@ uniform vec3 ambient; // Ia
 out vec4 FragColor;
 
 void main() {
+    // Sample the material texture and multiply it by the material color
     vec3 model_color = mat_color * texture(mat_texture, model_uv).rgb;
-    // Color
-    FragColor = vec4(model_color, 1.0);
+    
+    // Calculate final color using Gouraud shading
+    vec3 gouraud_diffuse = diffuse_illum * model_color;
+    vec3 gouraud_specular = specular_illum * mat_specular;
+    vec3 final_color = ambient + gouraud_diffuse + gouraud_specular;
+    
+    // Set the output color of the fragment
+    FragColor = vec4(final_color, 1.0);
 }
