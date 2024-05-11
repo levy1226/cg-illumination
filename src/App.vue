@@ -1,16 +1,15 @@
 <script setup>
-import { reactive, onMounted } from 'vue';
+import { onMounted, reactive } from 'vue';
 
 import { Engine } from '@babylonjs/core/Engines/engine';
-import { Mesh } from '@babylonjs/core/Meshes/mesh';
-import { VertexData } from '@babylonjs/core/Meshes/mesh.vertexData';
 import { Effect } from '@babylonjs/core/Materials/effect';
-import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import { ShaderMaterial } from '@babylonjs/core/Materials/shaderMaterial';
 import { Vector2 } from '@babylonjs/core/Maths/math.vector';
+import { Mesh } from '@babylonjs/core/Meshes/mesh';
+import { VertexData } from '@babylonjs/core/Meshes/mesh.vertexData';
 import { Tools } from '@babylonjs/core/Misc/tools';
 
-import { Renderer } from './renderer'
+import { Renderer } from './renderer';
 
 const BASE_URL = import.meta.env.BASE_URL || '/';
 

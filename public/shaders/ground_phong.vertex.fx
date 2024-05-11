@@ -30,8 +30,14 @@ out vec3 diffuse_illum;
 out vec3 specular_illum;
 
 void main() {
+    // Sample heightmap at current vertex uv coordinates
+    float height = texture(heightmap, uv).r * height_scalar; // Adjusted height
+    
+    // Displace vertex position along the y-axis
+    vec3 displacedPosition = position + vec3(0.0, height, 0.0);
+    
     // Get initial position of vertex (prior to height displacement)
-    vec4 world_pos = world * vec4(position, 1.0);
+    vec4 world_pos = world * vec4(displacedPosition, 1.0);
 
     // Compute vertex normal
     vec3 normal = vec3(0.0, 1.0, 0.0); // Assuming ground is flat, so normal is pointing straight up

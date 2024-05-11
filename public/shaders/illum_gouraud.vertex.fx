@@ -40,13 +40,12 @@ void main() {
         
         // Calculate specular component (Phong lighting model)
         vec3 view_dir = normalize(camera_position - vec3(world * vec4(position, 1.0)));
-        vec3 reflect_dir = reflect(-light_dir, normalize(normal));
+        vec3 reflect_dir = reflect(-light_dir, normal);
         float spec_angle = max(dot(view_dir, reflect_dir), 0.0);
         float specular_factor = pow(spec_angle, mat_shininess);
         specular_illum += specular_factor * light_colors[i];
     }
 
-    // Pass vertex texcoord onto the fragment shader
     model_uv = uv;
 
     // Transform and project vertex from 3D world-space to 2D screen-space
