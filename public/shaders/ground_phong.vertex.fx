@@ -31,7 +31,13 @@ out vec3 specular_illum;
 
 void main() {
     // Sample heightmap at current vertex uv coordinates
-    float height = texture(heightmap, uv).r * height_scalar; // Adjusted height
+    float heightValue = texture(heightmap, uv).r; // Get height value from texture
+    
+    // Remap height value from [0, 1] range to [-1, 1] range
+    float remappedHeight = heightValue * 2.0 - 1.0;
+    
+    // Scale the height by the scalar factor
+    float height = remappedHeight * height_scalar; // Adjusted height
     
     // Displace vertex position along the y-axis
     vec3 displacedPosition = position + vec3(0.0, height, 0.0);

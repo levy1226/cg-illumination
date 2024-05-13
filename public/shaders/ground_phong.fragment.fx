@@ -20,9 +20,9 @@ void main() {
     vec3 model_color = mat_color * texture(mat_texture, model_uv).rgb;
     
     // Calculate final color using Gouraud shading
-    vec3 gouraud_diffuse = diffuse_illum * model_color;
-    vec3 gouraud_specular = specular_illum * mat_specular;
-    vec3 final_color = ambient + gouraud_diffuse + gouraud_specular;
+    vec3 diffuse = diffuse_illum * model_color;
+    vec3 specular = specular_illum * mat_specular;
+    vec3 final_color = ambient + diffuse + specular;
     
     // Output the final color
     FragColor = vec4(final_color, 1.0);

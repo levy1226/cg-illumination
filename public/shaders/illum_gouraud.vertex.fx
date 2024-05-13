@@ -38,7 +38,7 @@ void main() {
         float diffuse_factor = max(dot(normalize(normal), light_dir), 0.0);
         diffuse_illum += diffuse_factor * light_colors[i];
         
-        // Calculate specular component (Phong lighting model)
+        
         vec3 view_dir = normalize(camera_position - vec3(world * vec4(position, 1.0)));
         vec3 reflect_dir = reflect(-light_dir, normal);
         float spec_angle = max(dot(view_dir, reflect_dir), 0.0);

@@ -25,6 +25,39 @@ class Renderer {
                 ambient: new Color3(0.2, 0.2, 0.2),
                 lights: [],
                 models: []
+            },
+            {
+                scene: new Scene(this.engine),
+                background_color: new Color4(0.2, 0.2, 0.2, 1.0), // New scene background color
+                materials: null,
+                ground_subdivisions: [50, 50],
+                ground_mesh: null,
+                camera: null,
+                ambient: new Color3(0.3, 0.3, 0.3), // New scene ambient color
+                lights: [],
+                models: []
+            },
+            {
+                scene: new Scene(this.engine),
+                background_color: new Color4(0.2, 0.2, 0.2, 1.0), // New scene background color
+                materials: null,
+                ground_subdivisions: [50, 50],
+                ground_mesh: null,
+                camera: null,
+                ambient: new Color3(0.3, 0.3, 0.3), // New scene ambient color
+                lights: [],
+                models: []
+            },
+            {
+                scene: new Scene(this.engine),
+                background_color: new Color4(0.2, 0.2, 0.2, 1.0), // New scene background color
+                materials: null,
+                ground_subdivisions: [50, 50],
+                ground_mesh: null,
+                camera: null,
+                ambient: new Color3(0.3, 0.3, 0.3), // New scene ambient color
+                lights: [],
+                models: []
             }
         ];
         this.active_scene = 0;
@@ -37,7 +70,6 @@ class Renderer {
             this['createScene'+ idx](idx);
         });
     }
-
     createScene0(scene_idx) {
         let current_scene = this.scenes[scene_idx];
         let scene = current_scene.scene;
@@ -120,6 +152,225 @@ class Renderer {
             this.updateShaderUniforms(scene_idx, materials['ground_' + this.shading_alg]);
         });
     }
+
+    createScene1(scene_idx) {
+        let current_scene = this.scenes[scene_idx];
+        let scene = current_scene.scene;
+        let materials = current_scene.materials;
+        let ground_mesh = current_scene.ground_mesh;
+    
+        // Set scene-wide / environment values
+        scene.clearColor = current_scene.background_color;
+        scene.ambientColor = current_scene.ambient;
+        scene.useRightHandedSystem = true;
+    
+        // Create camera
+        current_scene.camera = new UniversalCamera('camera', new Vector3(0.0, 1.8, 10.0), scene);
+        current_scene.camera.setTarget(new Vector3(0.0, 1.8, 0.0));
+        current_scene.camera.upVector = new Vector3(0.0, 1.0, 0.0);
+        current_scene.camera.attachControl(this.canvas, true);
+        current_scene.camera.fov = 35.0 * (Math.PI / 180);
+        current_scene.camera.minZ = 0.1;
+        current_scene.camera.maxZ = 100.0;
+    
+        // Create point light sources
+        let light0 = new PointLight('light0', new Vector3(1.0, 1.0, 5.0), scene);
+        light0.diffuse = new Color3(1.0, 1.0, 1.0);
+        light0.specular = new Color3(1.0, 1.0, 1.0);
+        current_scene.lights.push(light0);
+    
+        let light1 = new PointLight('light1', new Vector3(0.0, 3.0, 0.0), scene);
+        light1.diffuse = new Color3(0.2, 0.4, 0.6);
+        light1.specular = new Color3(0.2, 0.4, 0.6);
+        current_scene.lights.push(light1);
+    
+        // Create ground mesh (unchanged)
+        let white_texture = RawTexture.CreateRGBTexture(new Uint8Array([255, 255, 255]), 1, 1, scene);
+        let ground_heightmap = new Texture(BASE_URL + 'heightmaps/default.png', scene);
+        ground_mesh.scaling = new Vector3(20.0, 1.0, 20.0);
+        ground_mesh.metadata = {
+            mat_color: new Color3(0.10, 0.65, 0.15),
+            mat_texture: white_texture,
+            mat_specular: new Color3(0.0, 0.0, 0.0),
+            mat_shininess: 1,
+            texture_scale: new Vector2(1.0, 1.0),
+            height_scalar: 1.0,
+            heightmap: ground_heightmap
+        }
+        ground_mesh.material = materials['ground_' + this.shading_alg];
+        
+        // Create spheres
+        for (let i = 0; i < 2; i++) {
+            for (let j = 0; j < 2; j++) {
+                let sphere = CreateSphere('sphere', {segments: 32}, scene);
+                sphere.position = new Vector3(i * 2.0 - 1.0, 0.5, j * 2.0 + 2.0);
+                sphere.metadata = {
+                    mat_color: new Color3(0.10, 0.35, 0.88),
+                    mat_texture: white_texture,
+                    mat_specular: new Color3(0.8, 0.8, 0.8),
+                    mat_shininess: 16,
+                    texture_scale: new Vector2(1.0, 1.0)
+                }
+                sphere.material = materials['illum_' + this.shading_alg];
+                current_scene.models.push(sphere);
+            }
+        }
+        // Animation function - called before each frame gets rendered
+        scene.onBeforeRenderObservable.add(() => {
+            // update models and lights here (if needed)
+            // ...
+
+            // update uniforms in shader programs
+            this.updateShaderUniforms(scene_idx, materials['illum_' + this.shading_alg]);
+            this.updateShaderUniforms(scene_idx, materials['ground_' + this.shading_alg]);
+        });
+    }
+    createScene2(scene_idx) {
+        let current_scene = this.scenes[scene_idx];
+        let scene = current_scene.scene;
+        let materials = current_scene.materials;
+        let ground_mesh = current_scene.ground_mesh;
+    
+        // Set scene-wide / environment values
+        scene.clearColor = current_scene.background_color;
+        scene.ambientColor = current_scene.ambient;
+        scene.useRightHandedSystem = true;
+    
+        // Create camera
+        current_scene.camera = new UniversalCamera('camera', new Vector3(0.0, 1.8, 10.0), scene);
+        current_scene.camera.setTarget(new Vector3(0.0, 1.8, 0.0));
+        current_scene.camera.upVector = new Vector3(0.0, 1.0, 0.0);
+        current_scene.camera.attachControl(this.canvas, true);
+        current_scene.camera.fov = 35.0 * (Math.PI / 180);
+        current_scene.camera.minZ = 0.1;
+        current_scene.camera.maxZ = 100.0;
+    
+        // Create point light sources
+        let light0 = new PointLight('light0', new Vector3(1.0, 1.0, 5.0), scene);
+        light0.diffuse = new Color3(1.0, 1.0, 1.0);
+        light0.specular = new Color3(1.0, 1.0, 1.0);
+        current_scene.lights.push(light0);
+    
+        let light1 = new PointLight('light1', new Vector3(0.0, 3.0, 0.0), scene);
+        light1.diffuse = new Color3(1.0, 1.0, 1.0);
+        light1.specular = new Color3(1.0, 1.0, 1.0);
+        current_scene.lights.push(light1);
+    
+        // Create ground mesh (unchanged)
+        let white_texture = RawTexture.CreateRGBTexture(new Uint8Array([255, 255, 255]), 1, 1, scene);
+        let ground_heightmap = new Texture(BASE_URL + 'heightmaps/default.png', scene);
+        ground_mesh.scaling = new Vector3(20.0, 1.0, 20.0);
+        ground_mesh.metadata = {
+            mat_color: new Color3(0.10, 0.65, 0.15),
+            mat_texture: white_texture,
+            mat_specular: new Color3(0.0, 0.0, 0.0),
+            mat_shininess: 1,
+            texture_scale: new Vector2(1.0, 1.0),
+            height_scalar: 1.0,
+            heightmap: ground_heightmap
+        }
+        ground_mesh.material = materials['ground_' + this.shading_alg];
+    
+        // Create squares
+        let sizes = [1, 1.5, 2, 2.5, 3, 3.5];
+        sizes.forEach((size, index) => {
+            let box = CreateBox('box', { width: size, height: 1, depth: size }, scene);
+            box.position = new Vector3((index - 2.5) * 3.0, 0.5, 0.0);
+            box.metadata = {
+                mat_color: new Color3(0.75, 0.15, 0.05),
+                mat_texture: white_texture,
+                mat_specular: new Color3(0.4, 0.4, 0.4),
+                mat_shininess: 4,
+                texture_scale: new Vector2(1.0, 1.0)
+            }
+            box.material = materials['illum_' + this.shading_alg];
+            current_scene.models.push(box);
+        });
+        // Animation function - called before each frame gets rendered
+        scene.onBeforeRenderObservable.add(() => {
+            // update models and lights here (if needed)
+            // ...
+
+            // update uniforms in shader programs
+            this.updateShaderUniforms(scene_idx, materials['illum_' + this.shading_alg]);
+            this.updateShaderUniforms(scene_idx, materials['ground_' + this.shading_alg]);
+        });
+    }
+    createScene3(scene_idx) {
+        let current_scene = this.scenes[scene_idx];
+        let scene = current_scene.scene;
+        let materials = current_scene.materials;
+        let ground_mesh = current_scene.ground_mesh;
+    
+        // Set scene-wide / environment values
+        scene.clearColor = current_scene.background_color;
+        scene.ambientColor = current_scene.ambient;
+        scene.useRightHandedSystem = true;
+    
+        // Create camera
+        current_scene.camera = new UniversalCamera('camera', new Vector3(0.0, 1.8, 10.0), scene);
+        current_scene.camera.setTarget(new Vector3(0.0, 1.8, 0.0));
+        current_scene.camera.upVector = new Vector3(0.0, 1.0, 0.0);
+        current_scene.camera.attachControl(this.canvas, true);
+        current_scene.camera.fov = 35.0 * (Math.PI / 180);
+        current_scene.camera.minZ = 0.1;
+        current_scene.camera.maxZ = 100.0;
+    
+        // Create point light sources
+        let light0 = new PointLight('light0', new Vector3(1.0, 1.0, 5.0), scene);
+        light0.diffuse = new Color3(1.0, 1.0, 1.0);
+        light0.specular = new Color3(1.0, 1.0, 1.0);
+        current_scene.lights.push(light0);
+    
+        let light1 = new PointLight('light1', new Vector3(0.0, 3.0, 0.0), scene);
+        light1.diffuse = new Color3(1.0, 1.0, 1.0);
+        light1.specular = new Color3(1.0, 1.0, 1.0);
+        current_scene.lights.push(light1);
+    
+        // Create ground mesh (unchanged)
+        let white_texture = RawTexture.CreateRGBTexture(new Uint8Array([255, 255, 255]), 1, 1, scene);
+        let ground_heightmap = new Texture(BASE_URL + 'heightmaps/default.png', scene);
+        ground_mesh.scaling = new Vector3(20.0, 1.0, 20.0);
+        ground_mesh.metadata = {
+            mat_color: new Color3(0.10, 0.65, 0.15),
+            mat_texture: white_texture,
+            mat_specular: new Color3(0.0, 0.0, 0.0),
+            mat_shininess: 1,
+            texture_scale: new Vector2(1.0, 1.0),
+            height_scalar: 1.0,
+            heightmap: ground_heightmap
+        }
+        ground_mesh.material = materials['ground_' + this.shading_alg];
+    
+        // Create squares and circles
+        let shapes = ['square', 'circle'];
+        let colors = [new Color3(0.75, 0.15, 0.05), new Color3(0.10, 0.35, 0.88)];
+        let yPositions = [1.0, 2.0, 3.0];
+        shapes.forEach((shape, index) => {
+            let geometry = shape === 'square' ? CreateBox('box', { width: 1, height: 1, depth: 1 }, scene) :
+                                                 CreateSphere('sphere', { diameter: 1 }, scene);
+            geometry.position = new Vector3(0, yPositions[index], 0);
+            geometry.metadata = {
+                mat_color: colors[index % colors.length],
+                mat_texture: white_texture,
+                mat_specular: new Color3(0.4, 0.4, 0.4),
+                mat_shininess: 4,
+                texture_scale: new Vector2(1.0, 1.0)
+            }
+            geometry.material = materials['illum_' + this.shading_alg];
+            current_scene.models.push(geometry);
+        });
+        // Animation function - called before each frame gets rendered
+        scene.onBeforeRenderObservable.add(() => {
+            // update models and lights here (if needed)
+            // ...
+
+            // update uniforms in shader programs
+            this.updateShaderUniforms(scene_idx, materials['illum_' + this.shading_alg]);
+            this.updateShaderUniforms(scene_idx, materials['ground_' + this.shading_alg]);
+        });
+    }
+
 
     updateShaderUniforms(scene_idx, shader) {
         let current_scene = this.scenes[scene_idx];

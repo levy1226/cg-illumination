@@ -41,23 +41,22 @@ void main() {
     vec3 bitangent = vec3(0.0, 2.0 * ground_size.y / texture_scale.y, dy * height_scalar);
     vertex_normal = normalize(cross(tangent, bitangent));
 
-    // Compute direction from vertex to camera
-    vertex_view_dir = normalize(camera_position - world_pos.xyz);
-
-    // Calculate lighting for each light source
+    // Compute diffuse and specular illumination per vertex
     diffuse_illum = vec3(0.0);
     specular_illum = vec3(0.0);
     for (int i = 0; i < num_lights; ++i) {
-        // Compute direction from vertex to light
-        vertex_light_dir = normalize(light_positions[i] - world_pos.xyz);
-
-        // Compute diffuse and specular contributions
-        float diffuse_factor = max(dot(vertex_normal, vertex_light_dir), 0.0);
-        vec3 reflected_light_dir = reflect(-vertex_light_dir, vertex_normal);
-        float specular_factor = pow(max(dot(reflected_light_dir, vertex_view_dir), 0.0), mat_shininess);
-
-        // Accumulate illumination
+        // Calculate light direction
+        vec3 light_dir = normalize(light_positions[i] - vec3(world_pos));
+        
+        // Calculate diffuse component
+        float diffuse_factor = max(dot(normalize(vertex_normal), light_dir), 0.0);
         diffuse_illum += diffuse_factor * light_colors[i];
+        
+        // Calculate specular component (Phong lighting model)
+        vec3 view_dir = normalize(camera_position - vec3(world_pos));
+        vec3 reflect_dir = reflect(-light_dir, normalize(vertex_normal));
+        float spec_angle = max(dot(view_dir, reflect_dir), 0.0);
+        float specular_factor = pow(spec_angle, mat_shininess);
         specular_illum += specular_factor * light_colors[i];
     }
 
