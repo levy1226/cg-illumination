@@ -1,3 +1,4 @@
+import { DirectionalLight } from '@babylonjs/core';
 import { UniversalCamera } from '@babylonjs/core/Cameras/universalCamera';
 import { PointLight } from '@babylonjs/core/Lights/pointLight';
 import { RawTexture } from '@babylonjs/core/Materials/Textures/rawTexture';
@@ -33,7 +34,7 @@ class Renderer {
                 ground_subdivisions: [50, 50],
                 ground_mesh: null,
                 camera: null,
-                ambient: new Color3(0.3, 0.3, 0.3), // New scene ambient color
+                ambient: new Color3(0.05, 0.07, 0.4), // New scene ambient color
                 lights: [],
                 models: []
             },
@@ -179,14 +180,19 @@ class Renderer {
         light0.specular = new Color3(1.0, 1.0, 1.0);
         current_scene.lights.push(light0);
     
-        let light1 = new PointLight('light1', new Vector3(0.0, 3.0, 0.0), scene);
-        light1.diffuse = new Color3(0.2, 0.4, 0.6);
-        light1.specular = new Color3(0.2, 0.4, 0.6);
+        let light1 = new PointLight('light1', new Vector3(0.0, 2.0, 0.0), scene);
+        light1.diffuse = new Color3(0.8, 1.0, 0.2);
+        light1.specular = new Color3(0.8, 1.0, 0.2);
         current_scene.lights.push(light1);
+
+        let light2 = new DirectionalLight('light2', new Vector3(0.0, 2.0, -10.0), scene);
+        light2.diffuse = new Color3(1.0, 0.4, 0.5);
+        light2.specular = new Color3(1.0, 0.4, 0.5);
+        current_scene.lights.push(light2);
     
         // Create ground mesh (unchanged)
         let white_texture = RawTexture.CreateRGBTexture(new Uint8Array([255, 255, 255]), 1, 1, scene);
-        let ground_heightmap = new Texture(BASE_URL + 'heightmaps/default.png', scene);
+        let ground_heightmap = new Texture(BASE_URL + 'heightmaps/squares.png', scene);
         ground_mesh.scaling = new Vector3(20.0, 1.0, 20.0);
         ground_mesh.metadata = {
             mat_color: new Color3(0.10, 0.65, 0.15),
@@ -203,9 +209,9 @@ class Renderer {
         for (let i = 0; i < 2; i++) {
             for (let j = 0; j < 2; j++) {
                 let sphere = CreateSphere('sphere', {segments: 32}, scene);
-                sphere.position = new Vector3(i * 2.0 - 1.0, 0.5, j * 2.0 + 2.0);
+                sphere.position = new Vector3(i * 2.0 - 1.0, 1.5, j * 2.0 + 2.0);
                 sphere.metadata = {
-                    mat_color: new Color3(0.10, 0.35, 0.88),
+                    mat_color: new Color3(0.87, 0.07, 0.085),
                     mat_texture: white_texture,
                     mat_specular: new Color3(0.8, 0.8, 0.8),
                     mat_shininess: 16,
@@ -258,7 +264,7 @@ class Renderer {
     
         // Create ground mesh (unchanged)
         let white_texture = RawTexture.CreateRGBTexture(new Uint8Array([255, 255, 255]), 1, 1, scene);
-        let ground_heightmap = new Texture(BASE_URL + 'heightmaps/default.png', scene);
+        let ground_heightmap = new Texture(BASE_URL + 'heightmaps/face.png', scene);
         ground_mesh.scaling = new Vector3(20.0, 1.0, 20.0);
         ground_mesh.metadata = {
             mat_color: new Color3(0.10, 0.65, 0.15),
@@ -272,12 +278,12 @@ class Renderer {
         ground_mesh.material = materials['ground_' + this.shading_alg];
     
         // Create squares
-        let sizes = [1, 1.5, 2, 2.5, 3, 3.5];
+        let sizes = [1, 1.25, 1.75, 2.25, 2.5, 3.1];
         sizes.forEach((size, index) => {
-            let box = CreateBox('box', { width: size, height: 1, depth: size }, scene);
-            box.position = new Vector3((index - 2.5) * 3.0, 0.5, 0.0);
+            let box = CreateBox('box', { width: size, height: 1, depth: size / (Math.random() * 2.0 + 0.5)}, scene);
+            box.position = new Vector3((index - 2.5) * 3.0, 0.5, -10.0);
             box.metadata = {
-                mat_color: new Color3(0.75, 0.15, 0.05),
+                mat_color: new Color3(Math.random(), Math.random(), Math.random()),
                 mat_texture: white_texture,
                 mat_specular: new Color3(0.4, 0.4, 0.4),
                 mat_shininess: 4,
@@ -317,19 +323,29 @@ class Renderer {
         current_scene.camera.maxZ = 100.0;
     
         // Create point light sources
-        let light0 = new PointLight('light0', new Vector3(1.0, 1.0, 5.0), scene);
+        let light0 = new PointLight('white', new Vector3(3.0, 1.0, 3.0), scene);
         light0.diffuse = new Color3(1.0, 1.0, 1.0);
         light0.specular = new Color3(1.0, 1.0, 1.0);
         current_scene.lights.push(light0);
     
-        let light1 = new PointLight('light1', new Vector3(0.0, 3.0, 0.0), scene);
-        light1.diffuse = new Color3(1.0, 1.0, 1.0);
-        light1.specular = new Color3(1.0, 1.0, 1.0);
+        let light1 = new PointLight('red', new Vector3(-3.0, 1.0, -3.0), scene);
+        light1.diffuse = new Color3(1.0, 0.0, 0.0);
+        light1.specular = new Color3(1.0, 0.0, 0.0);
         current_scene.lights.push(light1);
+
+        let light2 = new PointLight('blue', new Vector3(3.0, 1.0, -3.0), scene);
+        light2.diffuse = new Color3(0.0, 1.0, 0.0);
+        light2.specular = new Color3(0.0, 1.0, 0.0);
+        current_scene.lights.push(light2);
+    
+        let light3 = new PointLight('green', new Vector3(-3.0, 1.0, 3.0), scene);
+        light3.diffuse = new Color3(0.0, 0.0, 1.0);
+        light3.specular = new Color3(0.0, 0.0, 1.0);
+        current_scene.lights.push(light3);
     
         // Create ground mesh (unchanged)
         let white_texture = RawTexture.CreateRGBTexture(new Uint8Array([255, 255, 255]), 1, 1, scene);
-        let ground_heightmap = new Texture(BASE_URL + 'heightmaps/default.png', scene);
+        let ground_heightmap = new Texture(BASE_URL + 'heightmaps/map.png', scene);
         ground_mesh.scaling = new Vector3(20.0, 1.0, 20.0);
         ground_mesh.metadata = {
             mat_color: new Color3(0.10, 0.65, 0.15),
@@ -344,16 +360,15 @@ class Renderer {
     
         // Create squares and circles
         let shapes = ['square', 'circle'];
-        let colors = [new Color3(0.75, 0.15, 0.05), new Color3(0.10, 0.35, 0.88)];
         let yPositions = [1.0, 2.0, 3.0];
         shapes.forEach((shape, index) => {
-            let geometry = shape === 'square' ? CreateBox('box', { width: 1, height: 1, depth: 1 }, scene) :
-                                                 CreateSphere('sphere', { diameter: 1 }, scene);
+            let geometry = shape === 'square' ? CreateBox('box', { width: 2, height: 2, depth: 2 }, scene) :
+                                                 CreateSphere('sphere', { diameter: 4 }, scene);
             geometry.position = new Vector3(0, yPositions[index], 0);
             geometry.metadata = {
-                mat_color: colors[index % colors.length],
+                mat_color: new Color3(0.4, 0.4, 0.4),
                 mat_texture: white_texture,
-                mat_specular: new Color3(0.4, 0.4, 0.4),
+                mat_specular: new Color3(0.8, 0.8, 0.8),
                 mat_shininess: 4,
                 texture_scale: new Vector2(1.0, 1.0)
             }
