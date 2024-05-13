@@ -22,7 +22,7 @@ void main() {
     vec3 model_color = mat_color * texture(mat_texture, model_uv).rgb;
     
     // Calculate final color using Gouraud shading
-    vec3 gouraud_diffuse = max(diffuse_illum * model_color, 0.0);
+    vec3 gouraud_diffuse = max((diffuse_illum * model_color), 0.0);
     vec3 gouraud_specular = specular_illum * mat_specular;
     vec3 final_color = (ambient * model_color) + gouraud_diffuse + gouraud_specular;
     
