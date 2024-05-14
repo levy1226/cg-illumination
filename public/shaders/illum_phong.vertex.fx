@@ -20,13 +20,13 @@ out vec3 model_normal;
 out vec2 model_uv;
 
 void main() {
-    // Pass vertex position onto the fragment shader
+    
     model_position = vec3(world * vec4(position, 1.0));
-    // Pass vertex normal onto the fragment shader
+    
     model_normal = mat3(transpose(inverse(world))) * normal;
-    // Pass vertex texcoord onto the fragment shader
+    
     model_uv = uv * texture_scale;
 
-    // Transform and project vertex from 3D world-space to 2D screen-space
+    
     gl_Position = projection * view * world * vec4(position, 1.0);
 }

@@ -39,11 +39,11 @@ void main() {
         vec3 light_dir = normalize(light_positions[i] - model_position);
         float light_distance = length(light_positions[i] - model_position);
 
-        // Calculate diffuse component
+        // Calculate diffuse
         float diffuse_factor = max(dot(model_normal, light_dir), 0.0);
         vec3 diffuse_color = light_colors[i] * mat_color * diffuse_factor;
 
-        // Calculate specular component
+        // Calculate specular
         vec3 view_dir = normalize(camera_position - model_position);
         vec3 reflect_dir = reflect(-light_dir, model_normal);
         float spec_angle = max(dot(view_dir, reflect_dir), 0.0);

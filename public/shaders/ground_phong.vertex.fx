@@ -22,7 +22,7 @@ uniform vec3 camera_position;
 // lights
 uniform int num_lights;
 uniform vec3 light_positions[8];
-uniform vec3 light_colors[8]; // Ip
+uniform vec3 light_colors[8];
 
 // Output
 out vec2 model_uv;
@@ -31,22 +31,22 @@ out vec3 specular_illum;
 
 void main() {
     // Sample heightmap at current vertex uv coordinates
-    float heightValue = texture(heightmap, uv).r; // Get height value from texture
+    float heightValue = texture(heightmap, uv).r;
     
-    // Remap height value from [0, 1] range to [-1, 1] range
+    
     float remappedHeight = heightValue * 2.0 - 1.0;
     
-    // Scale the height by the scalar factor
-    float height = remappedHeight * height_scalar; // Adjusted height
+    // Scale the height
+    float height = remappedHeight * height_scalar;
     
     // Displace vertex position along the y-axis
     vec3 displacedPosition = position + vec3(0.0, height, 0.0);
     
-    // Get initial position of vertex (prior to height displacement)
+    // Get initial position of vertex
     vec4 world_pos = world * vec4(displacedPosition, 1.0);
 
     // Compute vertex normal
-    vec3 normal = vec3(0.0, 1.0, 0.0); // Assuming ground is flat, so normal is pointing straight up
+    vec3 normal = vec3(0.0, 1.0, 0.0);
 
     // Compute diffuse and specular illumination per vertex
     diffuse_illum = vec3(0.0);
@@ -55,11 +55,11 @@ void main() {
         // Calculate light direction
         vec3 light_dir = normalize(light_positions[i] - vec3(world_pos));
         
-        // Calculate diffuse component
+        // Calculate diffuse
         float diffuse_factor = max(dot(normalize(normal), light_dir), 0.0);
         diffuse_illum += diffuse_factor * light_colors[i];
         
-        // Calculate specular component (Phong lighting model)
+        // Calculate specular
         vec3 view_dir = normalize(camera_position - vec3(world_pos));
         vec3 reflect_dir = reflect(-light_dir, normalize(normal));
         float spec_angle = max(dot(view_dir, reflect_dir), 0.0);
@@ -67,7 +67,7 @@ void main() {
         specular_illum += specular_factor * light_colors[i];
     }
 
-    // Pass vertex texcoord onto the fragment shader
+    
     model_uv = uv;
 
     // Transform and project vertex from 3D world-space to 2D screen-space

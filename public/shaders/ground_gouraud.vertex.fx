@@ -29,24 +29,24 @@ out vec3 specular_illum;
 
 void main() {
         // Sample heightmap at current vertex uv coordinates
-    float heightValue = texture(heightmap, uv).r; // Get height value from texture
+    float heightValue = texture(heightmap, uv).r;
     
     // Remap height value from [0, 1] range to [-1, 1] range
     float remappedHeight = heightValue * 2.0 - 1.0;
     
     // Scale the height by the scalar factor
-    float height = remappedHeight * height_scalar; // Adjusted height
+    float height = remappedHeight * height_scalar;
     
     // Displace vertex position along the y-axis
     vec3 displacedPosition = position + vec3(0.0, height, 0.0);
 
-    // Get initial position of vertex (prior to height displacement)
+    // Get initial position of vertex
     vec4 world_pos = world * vec4(displacedPosition, 1.0);
 
-    // Pass vertex texcoord onto the fragment shader
+    
     model_uv = uv;
 
-    // Compute vertex normal (approximated using heightmap)
+    // Compute vertex normal
     float dx = texture(heightmap, uv + vec2(texture_scale.x, 0.0)).r - texture(heightmap, uv - vec2(texture_scale.x, 0.0)).r;
     float dy = texture(heightmap, uv + vec2(0.0, texture_scale.y)).r - texture(heightmap, uv - vec2(0.0, texture_scale.y)).r;
     vec3 tangent = vec3(2.0 * ground_size.x / texture_scale.x, 0.0, dx * height_scalar);
@@ -60,11 +60,11 @@ void main() {
         // Calculate light direction
         vec3 light_dir = normalize(light_positions[i] - vec3(world_pos));
         
-        // Calculate diffuse component
+        // Calculate diffuse
         float diffuse_factor = max(dot(normalize(vertex_normal), light_dir), 0.0);
         diffuse_illum += (diffuse_factor * light_colors[i]);
         
-        // Calculate specular component (Phong lighting model)
+        // Calculate specular
         vec3 view_dir = normalize(camera_position - vec3(world_pos));
         vec3 reflect_dir = reflect(-light_dir, normalize(vertex_normal));
         float spec_angle = max(dot(view_dir, reflect_dir), 0.0);
@@ -72,6 +72,6 @@ void main() {
         specular_illum += specular_factor * light_colors[i];
     }
 
-    // Transform and project vertex from 3D world-space to 2D screen-space
+    
     gl_Position = projection * view * world_pos;
 }

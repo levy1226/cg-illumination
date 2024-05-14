@@ -1,4 +1,4 @@
-import { DirectionalLight } from '@babylonjs/core';
+import { DirectionalLight, Mesh, VertexData } from '@babylonjs/core';
 import { UniversalCamera } from '@babylonjs/core/Cameras/universalCamera';
 import { PointLight } from '@babylonjs/core/Lights/pointLight';
 import { RawTexture } from '@babylonjs/core/Materials/Textures/rawTexture';
@@ -29,34 +29,34 @@ class Renderer {
             },
             {
                 scene: new Scene(this.engine),
-                background_color: new Color4(0.2, 0.2, 0.2, 1.0), // New scene background color
+                background_color: new Color4(0.2, 0.2, 0.2, 1.0),
                 materials: null,
                 ground_subdivisions: [50, 50],
                 ground_mesh: null,
                 camera: null,
-                ambient: new Color3(0.05, 0.07, 0.4), // New scene ambient color
+                ambient: new Color3(0.05, 0.07, 0.4),
                 lights: [],
                 models: []
             },
             {
                 scene: new Scene(this.engine),
-                background_color: new Color4(0.2, 0.2, 0.2, 1.0), // New scene background color
+                background_color: new Color4(0.2, 0.2, 0.2, 1.0),
                 materials: null,
                 ground_subdivisions: [50, 50],
                 ground_mesh: null,
                 camera: null,
-                ambient: new Color3(0.3, 0.3, 0.3), // New scene ambient color
+                ambient: new Color3(0.3, 0.3, 0.3),
                 lights: [],
                 models: []
             },
             {
                 scene: new Scene(this.engine),
-                background_color: new Color4(0.2, 0.2, 0.2, 1.0), // New scene background color
+                background_color: new Color4(0.2, 0.2, 0.2, 1.0),
                 materials: null,
                 ground_subdivisions: [50, 50],
                 ground_mesh: null,
                 camera: null,
-                ambient: new Color3(0.3, 0.3, 0.3), // New scene ambient color
+                ambient: new Color3(0.3, 0.3, 0.3),
                 lights: [],
                 models: []
             }
@@ -70,7 +70,9 @@ class Renderer {
             scene.ground_mesh = ground_mesh_callback(scene.scene, scene.ground_subdivisions);
             this['createScene'+ idx](idx);
         });
+        
     }
+
     createScene0(scene_idx) {
         let current_scene = this.scenes[scene_idx];
         let scene = current_scene.scene;
@@ -116,8 +118,11 @@ class Renderer {
             heightmap: ground_heightmap
         }
         ground_mesh.material = materials['ground_' + this.shading_alg];
+
+        this.createSphereModel(scene, new Vector3(0, 1, 0), 1, 30);
         
         // Create other models
+        
         let sphere = CreateSphere('sphere', {segments: 32}, scene);
         sphere.position = new Vector3(1.0, 0.5, 3.0);
         sphere.metadata = {
@@ -160,12 +165,12 @@ class Renderer {
         let materials = current_scene.materials;
         let ground_mesh = current_scene.ground_mesh;
     
-        // Set scene-wide / environment values
+        
         scene.clearColor = current_scene.background_color;
         scene.ambientColor = current_scene.ambient;
         scene.useRightHandedSystem = true;
     
-        // Create camera
+        
         current_scene.camera = new UniversalCamera('camera', new Vector3(0.0, 1.8, 10.0), scene);
         current_scene.camera.setTarget(new Vector3(0.0, 1.8, 0.0));
         current_scene.camera.upVector = new Vector3(0.0, 1.0, 0.0);
@@ -174,7 +179,7 @@ class Renderer {
         current_scene.camera.minZ = 0.1;
         current_scene.camera.maxZ = 100.0;
     
-        // Create point light sources
+        
         let light0 = new PointLight('light0', new Vector3(1.0, 1.0, 5.0), scene);
         light0.diffuse = new Color3(1.0, 1.0, 1.0);
         light0.specular = new Color3(1.0, 1.0, 1.0);
@@ -190,7 +195,7 @@ class Renderer {
         light2.specular = new Color3(1.0, 0.4, 0.5);
         current_scene.lights.push(light2);
     
-        // Create ground mesh (unchanged)
+        
         let white_texture = RawTexture.CreateRGBTexture(new Uint8Array([255, 255, 255]), 1, 1, scene);
         let ground_heightmap = new Texture(BASE_URL + 'heightmaps/squares.png', scene);
         ground_mesh.scaling = new Vector3(20.0, 1.0, 20.0);
@@ -237,12 +242,12 @@ class Renderer {
         let materials = current_scene.materials;
         let ground_mesh = current_scene.ground_mesh;
     
-        // Set scene-wide / environment values
+        
         scene.clearColor = current_scene.background_color;
         scene.ambientColor = current_scene.ambient;
         scene.useRightHandedSystem = true;
     
-        // Create camera
+        
         current_scene.camera = new UniversalCamera('camera', new Vector3(0.0, 1.8, 10.0), scene);
         current_scene.camera.setTarget(new Vector3(0.0, 1.8, 0.0));
         current_scene.camera.upVector = new Vector3(0.0, 1.0, 0.0);
@@ -251,7 +256,7 @@ class Renderer {
         current_scene.camera.minZ = 0.1;
         current_scene.camera.maxZ = 100.0;
     
-        // Create point light sources
+        
         let light0 = new PointLight('light0', new Vector3(1.0, 1.0, 5.0), scene);
         light0.diffuse = new Color3(1.0, 1.0, 1.0);
         light0.specular = new Color3(1.0, 1.0, 1.0);
@@ -262,7 +267,7 @@ class Renderer {
         light1.specular = new Color3(1.0, 1.0, 1.0);
         current_scene.lights.push(light1);
     
-        // Create ground mesh (unchanged)
+        
         let white_texture = RawTexture.CreateRGBTexture(new Uint8Array([255, 255, 255]), 1, 1, scene);
         let ground_heightmap = new Texture(BASE_URL + 'heightmaps/face.png', scene);
         ground_mesh.scaling = new Vector3(20.0, 1.0, 20.0);
@@ -308,12 +313,12 @@ class Renderer {
         let materials = current_scene.materials;
         let ground_mesh = current_scene.ground_mesh;
     
-        // Set scene-wide / environment values
+        
         scene.clearColor = current_scene.background_color;
         scene.ambientColor = current_scene.ambient;
         scene.useRightHandedSystem = true;
     
-        // Create camera
+        
         current_scene.camera = new UniversalCamera('camera', new Vector3(0.0, 1.8, 10.0), scene);
         current_scene.camera.setTarget(new Vector3(0.0, 1.8, 0.0));
         current_scene.camera.upVector = new Vector3(0.0, 1.0, 0.0);
@@ -322,7 +327,7 @@ class Renderer {
         current_scene.camera.minZ = 0.1;
         current_scene.camera.maxZ = 100.0;
     
-        // Create point light sources
+        
         let light0 = new PointLight('white', new Vector3(3.0, 1.0, 3.0), scene);
         light0.diffuse = new Color3(1.0, 1.0, 1.0);
         light0.specular = new Color3(1.0, 1.0, 1.0);
@@ -343,7 +348,7 @@ class Renderer {
         light3.specular = new Color3(0.0, 0.0, 1.0);
         current_scene.lights.push(light3);
     
-        // Create ground mesh (unchanged)
+        
         let white_texture = RawTexture.CreateRGBTexture(new Uint8Array([255, 255, 255]), 1, 1, scene);
         let ground_heightmap = new Texture(BASE_URL + 'heightmaps/map.png', scene);
         ground_mesh.scaling = new Vector3(20.0, 1.0, 20.0);
@@ -358,7 +363,7 @@ class Renderer {
         }
         ground_mesh.material = materials['ground_' + this.shading_alg];
     
-        // Create squares and circles
+        
         let shapes = ['square', 'circle'];
         let yPositions = [1.0, 2.0, 3.0];
         shapes.forEach((shape, index) => {
@@ -434,6 +439,54 @@ class Renderer {
     setActiveLight(idx) {
         console.log(idx);
         this.active_light = idx;
+    }
+    createSphereModel(scene, position, radius, numSegments) {
+        const sphereMesh = new Mesh('sphereMesh', scene);
+    
+        const vertexData = new VertexData();
+    
+        
+        const positions = [];
+        const indices = [];
+        for (let lat = 0; lat <= numSegments; lat++) {
+            const theta = lat * Math.PI / numSegments;
+            const sinTheta = Math.sin(theta);
+            const cosTheta = Math.cos(theta);
+    
+            for (let long = 0; long <= numSegments; long++) {
+                const phi = long * 2 * Math.PI / numSegments;
+                const sinPhi = Math.sin(phi);
+                const cosPhi = Math.cos(phi);
+    
+                const x = cosPhi * sinTheta;
+                const y = cosTheta;
+                const z = sinPhi * sinTheta;
+    
+                positions.push(radius * x, radius * y, radius * z);
+    
+                if (lat < numSegments && long < numSegments) {
+                    const first = (lat * (numSegments + 1)) + long;
+                    const second = first + numSegments + 1;
+                    indices.push(first, second, first + 1);
+                    indices.push(second, second + 1, first + 1);
+                }
+            }
+        }
+    
+        vertexData.positions = positions;
+        vertexData.indices = indices;
+    
+        
+        vertexData.applyToMesh(sphereMesh);
+    
+        
+        sphereMesh.position.copyFrom(position);
+    
+        
+        scene.addMesh(sphereMesh);
+    
+        
+        return sphereMesh;
     }
 }
 
