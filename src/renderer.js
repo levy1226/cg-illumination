@@ -119,7 +119,7 @@ class Renderer {
         }
         ground_mesh.material = materials['ground_' + this.shading_alg];
 
-        this.createSphereModel(scene, new Vector3(0, 1, 0), 1, 30);
+        
         
         // Create other models
         
@@ -209,6 +209,9 @@ class Renderer {
             heightmap: ground_heightmap
         }
         ground_mesh.material = materials['ground_' + this.shading_alg];
+
+        // create custom object
+        this.createSphereModel(scene, new Vector3(0, 1, 0), 1, 30);
         
         // Create spheres
         for (let i = 0; i < 2; i++) {
